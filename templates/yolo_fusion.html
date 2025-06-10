@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YOLO-Integrated Radar-Camera Fusion</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .header .subtitle {
+            margin: 10px 0 0 0;
+            font-size: 1.2em;
+            opacity: 0.9;
+            color: #E8F4F8;
+        }
+        
+        .main-container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+        
+        .video-container {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .video-feed {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        .controls-panel {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .status-section {
+            margin-bottom: 25px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            border-left: 4px solid #00ff88;
+        }
+        
+        .status-section h3 {
+            margin: 0 0 15px 0;
+            color: #00ff88;
+            font-size: 1.1em;
+        }
+        
+        .metric {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 8px 0;
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 5px;
+        }
+        
+        .metric-label {
+            font-weight: 500;
+        }
+        
+        .metric-value {
+            font-weight: bold;
+            color: #FFD700;
+        }
+        
+        .fusion-rate {
+            font-size: 1.2em;
+            color: #00ff88;
+        }
+        
+        .debug-section {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            border-left: 4px solid #ff6b6b;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .debug-section h3 {
+            margin: 0 0 15px 0;
+            color: #ff6b6b;
+            font-size: 1.1em;
+        }
+        
+        .debug-item {
+            font-family: 'Courier New', monospace;
+            font-size: 0.85em;
+            margin: 5px 0;
+            padding: 5px 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 3px;
+            color: #E8F4F8;
+        }
+        
+        .yolo-status {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        
+        .yolo-enabled {
+            background: #00ff88;
+            color: #000;
+        }
+        
+        .yolo-disabled {
+            background: #ff6b6b;
+            color: #fff;
+        }
+        
+        .legend {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+        
+        .legend h4 {
+            margin: 0 0 10px 0;
+            color: #FFD700;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin: 8px 0;
+        }
+        
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 3px;
+            margin-right: 10px;
+        }
+        
+        .radar-color { background: #FFFF00; }
+        .camera-color { background: #00FF00; }
+        .fusion-color { background: #FF00FF; }
+        
+        .performance-indicator {
+            text-align: center;
+            margin: 15px 0;
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+        }
+        
+        .performance-good { border-left: 4px solid #00ff88; }
+        .performance-fair { border-left: 4px solid #ffa500; }
+        .performance-poor { border-left: 4px solid #ff6b6b; }
+        
+        @media (max-width: 1200px) {
+            .main-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            opacity: 0.7;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🎯 YOLO-Integrated Radar-Camera Fusion</h1>
+        <p class="subtitle">Advanced Vehicle Detection with Hungarian Algorithm Association</p>
+    </div>
+    
+    <div class="main-container">
+        <div class="video-container">
+            <img id="video-feed" class="video-feed" src="/video_feed" alt="Live Fusion Feed">
+        </div>
+        
+        <div class="controls-panel">
+            <div class="status-section">
+                <h3>🎯 Detection Status</h3>
+                <div class="metric">
+                    <span class="metric-label">Vehicle Detection:</span>
+                    <span id="yolo-status" class="yolo-status yolo-disabled">Loading...</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Radar Objects:</span>
+                    <span id="radar-count" class="metric-value">0</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Camera Objects:</span>
+                    <span id="camera-count" class="metric-value">0</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Fused Objects:</span>
+                    <span id="fusion-count" class="metric-value">0</span>
+                </div>
+            </div>
+            
+            <div class="status-section">
+                <h3>📊 Fusion Performance</h3>
+                <div class="performance-indicator" id="performance-indicator">
+                    <div style="font-size: 1.5em; margin-bottom: 5px;">
+                        <span id="fusion-rate" class="fusion-rate">0%</span>
+                    </div>
+                    <div>Fusion Success Rate</div>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Algorithm:</span>
+                    <span class="metric-value">Hungarian</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Coordinate Transform:</span>
+                    <span class="metric-value">Research-Based</span>
+                </div>
+            </div>
+            
+            <div class="legend">
+                <h4>🎨 Visual Legend</h4>
+                <div class="legend-item">
+                    <div class="legend-color radar-color"></div>
+                    <span>Radar Objects (Yellow)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color camera-color"></div>
+                    <span>Camera Objects (Green)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color fusion-color"></div>
+                    <span>Fusion Connections (Magenta)</span>
+                </div>
+            </div>
+            
+            <div class="debug-section">
+                <h3>🔍 Debug Information</h3>
+                <div id="debug-log">
+                    <div class="debug-item">Starting YOLO fusion system...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <p>🔬 Research-Based Sensor Fusion | YOLO + Hungarian Algorithm | Real-time Processing</p>
+    </div>
+
+    <script>
+        // Update status every second
+        function updateStatus() {
+            fetch('/api/status')
+                .then(response => response.json())
+                .then(data => {
+                    // Update counts
+                    document.getElementById('radar-count').textContent = data.radar_count;
+                    document.getElementById('camera-count').textContent = data.camera_count;
+                    document.getElementById('fusion-count').textContent = data.fusion_count;
+                    
+                    // Update fusion rate
+                    const fusionRate = (data.fusion_rate * 100).toFixed(1);
+                    document.getElementById('fusion-rate').textContent = fusionRate + '%';
+                    
+                    // Update YOLO status
+                    const yoloStatus = document.getElementById('yolo-status');
+                    if (data.yolo_enabled) {
+                        yoloStatus.textContent = 'YOLO Active';
+                        yoloStatus.className = 'yolo-status yolo-enabled';
+                    } else {
+                        yoloStatus.textContent = 'Fallback Mode';
+                        yoloStatus.className = 'yolo-status yolo-disabled';
+                    }
+                    
+                    // Update performance indicator
+                    const performanceEl = document.getElementById('performance-indicator');
+                    const rate = data.fusion_rate;
+                    
+                    performanceEl.className = 'performance-indicator ';
+                    if (rate >= 0.7) {
+                        performanceEl.className += 'performance-good';
+                    } else if (rate >= 0.4) {
+                        performanceEl.className += 'performance-fair';
+                    } else {
+                        performanceEl.className += 'performance-poor';
+                    }
+                    
+                    // Update debug log
+                    const debugLog = document.getElementById('debug-log');
+                    if (data.debug_info && data.debug_info.length > 0) {
+                        debugLog.innerHTML = '';
+                        data.debug_info.forEach(info => {
+                            const debugItem = document.createElement('div');
+                            debugItem.className = 'debug-item';
+                            debugItem.textContent = info;
+                            debugLog.appendChild(debugItem);
+                        });
+                        
+                        // Auto-scroll to bottom
+                        debugLog.scrollTop = debugLog.scrollHeight;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching status:', error);
+                });
+        }
+        
+        // Start updating status
+        updateStatus();
+        setInterval(updateStatus, 1000);
+        
+        // Add error handling for video feed
+        document.getElementById('video-feed').onerror = function() {
+            this.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAwIiBoZWlnaHQ9IjYwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMzMzIi8+CiAgPHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIyNCIgZmlsbD0iI2ZmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkNhbWVyYSBGZWVkIFVuYXZhaWxhYmxlPC90ZXh0Pgo8L3N2Zz4K';
+        };
+        
+        // Refresh video feed periodically
+        setInterval(() => {
+            const img = document.getElementById('video-feed');
+            const src = img.src;
+            img.src = '';
+            img.src = src;
+        }, 30000); // Refresh every 30 seconds
+    </script>
+</body>
+</html>
