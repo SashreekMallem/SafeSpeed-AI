@@ -1,0 +1,21 @@
+# ...existing code...
+
+[class-attrs-all]
+threshold=0.6  # Increase the threshold to reduce false positives
+
+[property]
+model-engine-file=/home/projecta/SafespeedAI/deepstream_models/LPR/us_lprnet_baseline18_deployable.onnx_b16_gpu0_fp16.engine
+labelfile-path=/home/projecta/SafespeedAI/deepstream_models/LPR/labels_us.txt
+batch-size=16
+network-mode=2
+num-detected-classes=37
+gie-unique-id=5
+infer-dims=3;48;96
+output-blob-names=tf_op_layer_ArgMax;tf_op_layer_Max
+network-type=1
+parse-classifier-func-name=NvDsInferParseCustomNVPlate
+custom-lib-path=/home/projecta/SafespeedAI/common/nvinfer_custom_lpr_parser/libnvdsinfer_custom_impl_lpr.so
+process-mode=2
+operate-on-gie-id=4
+net-scale-factor=0.00392156862745098
+model-color-format=0

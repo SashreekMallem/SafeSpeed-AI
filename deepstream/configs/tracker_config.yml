@@ -1,0 +1,27 @@
+# NvMultiObjectTracker Configuration
+# Optimized for vehicle tracking
+
+%YAML:1.0
+NvMOT:
+  tracker-width: 640                # [1, 4096] Width of tracking frame
+  tracker-height: 384               # [1, 4096] Height of tracking frame
+  gpu-id: 0                         # [0, N-1] GPU ID for tracking
+  ll-lib-file: /opt/nvidia/deepstream/deepstream/lib/libnvds_nvmultiobjecttracker.so
+  ll-config-file: /home/projecta/SafespeedAI/deepstream/configs/tracker_config.yml
+  enable-batch-process: 1           # [0, 1] Enable batch processing mode
+  enable-past-frame: 1              # [0, 1] Enable past frame feature
+
+NvDCF:
+  min-detector-confidence: 0.2      # [0.0, 1.0] Minimum detector confidence for DCF
+  max-targets-per-stream: 30        # [1, inf] Maximum targets per stream
+  
+NvDeepSORT:
+  min-detector-confidence: 0.2      # [0.0, 1.0] Minimum detector confidence 
+  max-targets-per-stream: 30        # [1, inf] Maximum targets per stream
+  reid-feature-size: 128            # [1, inf] ReID feature size
+  reid-use-ltrb: 0                  # [0, 1] Use left-top-right-bottom format
+  
+NvIOU:
+  min-detector-confidence: 0.2      # [0.0, 1.0] Minimum detector confidence
+  max-targets-per-stream: 30        # [1, inf] Maximum targets per stream
+  iou-threshold: 0.3                # [0.0, 1.0] IOU threshold

@@ -1,0 +1,30 @@
+# License Plate Detection (LPD) Configuration
+# NVIDIA TAO LPD model for detecting license plate regions
+
+[property]
+gpu-id=0
+net-scale-factor=0.0039215697906911373
+model-color-format=0
+model-engine-file=/home/projecta/SafespeedAI/models/lpd/lpd.engine
+labelfile-path=/home/projecta/SafespeedAI/models/lpd/lpd_labels.txt
+force-implicit-batch-dim=1
+batch-size=16
+network-mode=2
+num-detected-classes=1
+interval=0
+gie-unique-id=3
+output-blob-names=output_cov/Sigmoid;output_bbox/BiasAdd
+parse-bbox-func-name=NvDsInferParseCustomResnet
+custom-lib-path=/opt/nvidia/deepstream/deepstream/lib/libnvds_infercustomparser.so
+engine-create-func-name=NvDsInferEngineCreateFuncStub
+
+[class-attrs-all]
+nms-iou-threshold=0.6
+pre-cluster-threshold=0.2
+topk=20
+roi-top-offset=0
+roi-bottom-offset=0
+detected-min-w=0
+detected-min-h=0
+detected-max-w=0
+detected-max-h=0

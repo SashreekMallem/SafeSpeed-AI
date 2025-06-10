@@ -1,0 +1,4 @@
+# AWR1843BOOST udev rules
+# Texas Instruments AWR1843 mmWave Radar
+SUBSYSTEM=="tty", ATTRS{idVendor}=="0451", ATTRS{idProduct}=="fd03", SYMLINK+="awr1843_config"
+SUBSYSTEM=="tty", ATTRS{idVendor}=="0451", ATTRS{idProduct}=="fd03", SYMLINK+="awr1843_data"

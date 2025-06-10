@@ -1,0 +1,25 @@
+# Secondary CarNet Configuration
+# Vehicle Make/Model Classification
+
+[property]
+gpu-id=0
+net-scale-factor=0.0039215697906911373
+model-color-format=0
+model-engine-file=/home/projecta/SafespeedAI/models/secondarynet/vehicletypenet.engine
+labelfile-path=/home/projecta/SafespeedAI/models/secondarynet/vehicletypenet_labels.txt
+force-implicit-batch-dim=1
+batch-size=16
+network-mode=2
+process-mode=2
+model-color-format=0
+maintain-aspect-ratio=1
+symmetric-padding=1
+gie-unique-id=2
+output-blob-names=predictions/Softmax
+classifier-async-mode=1
+classifier-threshold=0.51
+parse-classifier-func-name=NvDsInferClassiferParseCustomSoftmax
+custom-lib-path=/opt/nvidia/deepstream/deepstream/lib/libnvds_infercustomparser.so
+
+[class-attrs-all]
+threshold=0.51

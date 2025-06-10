@@ -1,0 +1,10 @@
+# Specific directories and files to ignore
+deepstream_models/
+common/
+sample.mp4
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd

@@ -1,0 +1,22 @@
+# License Plate Recognition (LPR) Configuration
+# NVIDIA TAO LPR model for OCR of license plate text
+
+[property]
+gpu-id=0
+net-scale-factor=0.0078431372549019607
+model-color-format=1
+model-engine-file=/home/projecta/SafespeedAI/models/lpr/lpr.engine
+force-implicit-batch-dim=1
+batch-size=16
+network-mode=2
+process-mode=2
+model-color-format=1
+maintain-aspect-ratio=1
+symmetric-padding=1
+gie-unique-id=4
+output-blob-names=tf_op_layer_ArgMax;tf_op_layer_Max
+custom-lib-path=/home/projecta/SafespeedAI/deepstream/plugins/libnvds_lpr_parser.so
+parse-classifier-func-name=NvDsInferClassiferParseCustomSoftmax
+
+[class-attrs-all]
+threshold=0.51

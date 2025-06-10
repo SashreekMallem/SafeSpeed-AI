@@ -1,0 +1,33 @@
+# TrafficCamNet Configuration
+# Optimized for vehicle detection in traffic scenarios
+
+[property]
+gpu-id=0
+net-scale-factor=0.0039215697906911373
+model-color-format=0
+custom-network-config=/home/projecta/SafespeedAI/models/trafficcamnet/trafficcamnet.cfg
+model-file=/home/projecta/SafespeedAI/models/trafficcamnet/trafficcamnet.caffemodel
+proto-file=/home/projecta/SafespeedAI/models/trafficcamnet/trafficcamnet.prototxt
+model-engine-file=/home/projecta/SafespeedAI/models/trafficcamnet/trafficcamnet.engine
+labelfile-path=/home/projecta/SafespeedAI/models/trafficcamnet/labels.txt
+int8-calib-file=/home/projecta/SafespeedAI/models/trafficcamnet/calibration.cache
+force-implicit-batch-dim=1
+batch-size=1
+network-mode=2
+num-detected-classes=4
+interval=0
+gie-unique-id=1
+output-blob-names=coverage;bbox
+parse-bbox-func-name=NvDsInferParseCustomResnet
+custom-lib-path=/opt/nvidia/deepstream/deepstream/lib/libnvds_infercustomparser.so
+
+[class-attrs-all]
+nms-iou-threshold=0.4
+pre-cluster-threshold=0.2
+topk=20
+roi-top-offset=0
+roi-bottom-offset=0
+detected-min-w=0
+detected-min-h=0
+detected-max-w=0
+detected-max-h=0

@@ -1,0 +1,25 @@
+[property]
+gpu-id=0
+net-scale-factor=0.0039215697906911373
+model-color-format=0
+onnx-file=/home/projecta/SafespeedAI/models/LPDNet_usa_pruned_tao5.onnx
+model-engine-file=/home/projecta/SafespeedAI/models/LPDNet_usa_pruned.engine
+labelfile-path=/home/projecta/SafespeedAI/models/labels_lpdnet.txt
+batch-size=1
+network-mode=0
+num-detected-classes=1
+interval=0
+gie-unique-id=2
+process-mode=1
+network-type=0  # 0 for detection tasks
+cluster-mode=2
+maintain-aspect-ratio=1
+symmetric-padding=1
+#custom-lib-path=/home/sashreek/trafficcamnet/deepstream_tao_apps/post_processor/libnvds_infercustomparser_tao.so
+#parse-bbox-func-name=NvDsInferParseCustomBatchedNMSTLT
+
+[class-attrs-all]
+nms-iou-threshold=0.45
+pre-cluster-threshold=0.25
+topk=300
+
